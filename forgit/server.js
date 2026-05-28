@@ -45,7 +45,7 @@ db.serialize(() => {
     console.log("Таблицы БД готовы.");
 });
 
-// 3. НАСТРОЙКА ЯНДЕКС.ПОЧТЫ
+// 3. НАСТРОЙКА ПОЧТЫ ДЛЯ ОТПРАВКИ ПИСЕМ ПОДТВЕРЖДЕНИЯ И ВОССТАНОВЛЕНИЯ ПАРОЛЯ
 const YANDEX_USER = 'mr-fort205@yandex.ru'; 
 const YANDEX_PASS = 'bwzymdcaiskutiux'; 
 
@@ -65,7 +65,7 @@ transporter.verify((error) => {
     else console.log("Яндекс.Почта готова к отправке писем.");
 });
 
-// --- МИДЛВАР: ПРОВЕРКА АВТОРИЗАЦИИ (JWT) ---
+// Тут происходит проверка JWT токена для защищенных маршрутов (например, для получения проектов, создания/редактирования проектов и т.д.)
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -79,7 +79,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// 4. РОУТ: РЕГИСТРАЦИЯ
+// 4. РОУТ: РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ (С ОТПРАВКОЙ КОДА ПОДТВЕРЖДЕНИЯ НА ПОЧТУ)
 app.post('/api/register', async (req, res) => {
     const { username, password, email } = req.body;
     console.log(`Попытка регистрации: ${username} (${email})`);
@@ -102,7 +102,7 @@ app.post('/api/register', async (req, res) => {
                     await transporter.sendMail({
                         from: `"GreenBuild" <${YANDEX_USER}>`,
                         to: email,
-                        subject: "Благодарим за регистрацию на GreenBuild",
+                        subject: "Благодарим за регистрацию на GreenBuild", // Дизайн письма в стилистике сайта
                         html: `
                             <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #1a202c; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff;">
                                 <div style="background-color: #059669; padding: 25px; text-align: center;">
@@ -146,7 +146,7 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// 5. РОУТ: ПОДТВЕРЖДЕНИЕ
+// 5. РОУТ: ПОДТВЕРЖДЕНИЕ АККАУНТА ПО КОДУ ИЗ ПИСЬМА
 app.post('/api/verify', (req, res) => {
     const { username, code } = req.body;
     db.get("SELECT * FROM users WHERE username = ? AND verification_code = ?", [username, code], (err, user) => {
@@ -159,7 +159,7 @@ app.post('/api/verify', (req, res) => {
     });
 });
 
-// 6. РОУТ: ЛОГИН
+// 6. РОУТ: ЛОГИН (ПРОВЕРКА ПОДТВЕРЖДЕНИЯ И ВЫДАЧА JWT ТОКЕНА)
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     db.get("SELECT * FROM users WHERE username = ?", [username], async (err, user) => {
@@ -177,7 +177,7 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// 7. РОУТ: ВОССТАНОВЛЕНИЕ ПАРОЛЯ
+// 7. РОУТ: ВОССТАНОВЛЕНИЕ ПАРОЛЯ (СБРОС И ОТПРАВКА ВРЕМЕННОГО ПАРОЛЯ НА ПОЧТУ)
 app.post('/api/forgot-password', (req, res) => {
     const { email } = req.body;
 
@@ -198,7 +198,7 @@ app.post('/api/forgot-password', (req, res) => {
                     await transporter.sendMail({
                         from: `"GreenBuild Support" <${YANDEX_USER}>`,
                         to: email,
-                        subject: "Восстановление доступа к GreenBuild",
+                        subject: "Восстановление доступа к GreenBuild", // Дизайн письма для восстановления пароля в стилистике сайта
                         html: `
                             <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #1a202c; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff;">
                                 <div style="background-color: #064e3b; padding: 25px; text-align: center;">
@@ -237,7 +237,7 @@ app.post('/api/forgot-password', (req, res) => {
     });
 });
 
-// 8. РОУТ: ПОЛУЧИТЬ ВСЕ ПРОЕКТЫ ПОЛЬЗОВАТЕЛЯ
+// 8. РОУТ: ПОЛУЧИТЬ ВСЕ ПРОЕКТЫ ПОЛЬЗОВАТЕЛЯ (ДЛЯ ГЛАВНОЙ СТРАНИЦЫ ДАШБОРДА)
 app.get('/api/projects', authenticateToken, (req, res) => {
     db.all("SELECT id, name, blocks, preview_url, created_at FROM projects WHERE user_id = ? ORDER BY created_at DESC", [req.user.id], (err, rows) => {
         if (err) return res.status(500).json({ error: "Ошибка БД при получении проектов" });
@@ -245,7 +245,7 @@ app.get('/api/projects', authenticateToken, (req, res) => {
     });
 });
 
-// 9. РОУТ: ПОЛУЧИТЬ ДАННЫЕ ОДНОГО ПРОЕКТА (ДЛЯ РЕДАКТОРА)
+// 9. РОУТ: ПОЛУЧИТЬ ДАННЫЕ ОДНОГО ПРОЕКТА (ДЛЯ РЕДАКТОРА) 
 app.get('/api/projects/:id', authenticateToken, (req, res) => {
     db.get("SELECT * FROM projects WHERE id = ? AND user_id = ?", [req.params.id, req.user.id], (err, project) => {
         if (err) return res.status(500).json({ error: "Ошибка базы данных" });
@@ -259,7 +259,7 @@ app.get('/api/projects/:id', authenticateToken, (req, res) => {
     });
 });
 
-// 10. РОУТ: СОЗДАНИЕ НОВОГО ПРОЕКТА (С ПОДДЕРЖКОЙ ШАБЛОНОВ)
+// 10. РОУТ: СОЗДАНИЕ НОВОГО ПРОЕКТА (С ПОДДЕРЖКОЙ ШАБЛОНОВ) 
 app.post('/api/projects', authenticateToken, (req, res) => {
     const { name, blocks } = req.body;
     if (!name) return res.status(400).json({ error: "Название проекта обязательно" });
@@ -279,7 +279,7 @@ app.post('/api/projects', authenticateToken, (req, res) => {
     );
 });
 
-// 11. РОУТ: СОХРАНИТЬ ИЗМЕНЕНИЯ ПРОЕКТА
+// 11. РОУТ: СОХРАНИТЬ ИЗМЕНЕНИЯ ПРОЕКТА (ИЗ РЕДАКТОРА, С ПОДДЕРЖКОЙ ОБНОВЛЕНИЯ НАЗВАНИЯ И БЛОКОВ)
 app.put('/api/projects/:id', authenticateToken, (req, res) => {
     const { blocks, name } = req.body;
     const blocksStr = JSON.stringify(blocks || []);
@@ -296,7 +296,7 @@ app.put('/api/projects/:id', authenticateToken, (req, res) => {
     );
 });
 
-// 12. РОУТ: ИЗМЕНЕНИЕ ПУБЛИЧНОСТИ/ПУБЛИКАЦИЯ ПРОЕКТА
+// 12. РОУТ: ИЗМЕНЕНИЕ ПУБЛИЧНОСТИ/ПУБЛИКАЦИЯ ПРОЕКТА (УСТАНОВКА УРОВНЯ ДОСТУПА: ВСЕМ, ТОЛЬКО АВТОРИЗОВАННЫМ ИЛИ ТОЛЬКО АВТОРУ)
 app.put('/api/projects/:id/publish', authenticateToken, (req, res) => {
     const { access_level } = req.body;
     
@@ -316,7 +316,7 @@ app.put('/api/projects/:id/publish', authenticateToken, (req, res) => {
     );
 });
 
-// 13. РОУТ: ПРОСМОТР ОПУБЛИКОВАННОГО САЙТА
+// 13. РОУТ: ПРОСМОТР ОПУБЛИКОВАННОГО САЙТА (ПРОВЕРКА УРОВНЯ ДОСТУПА И ВЫДАЧА ДАННЫХ ДЛЯ РЕНДЕРА САЙТА)
 app.get('/api/projects/:id/view', (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -350,7 +350,7 @@ app.get('/api/projects/:id/view', (req, res) => {
     }
 });
 
-// 14. РОУТ: УДАЛЕНИЕ ПРОЕКТА (Добавлено для работы Dashboard.jsx)
+// 14. РОУТ: УДАЛЕНИЕ ПРОЕКТА (Добавлено для работы Dashboard.jsx и возможности удалять проекты) 
 app.delete('/api/projects/:id', authenticateToken, (req, res) => {
     db.run("DELETE FROM projects WHERE id = ? AND user_id = ?", [req.params.id, req.user.id], function (err) {
         if (err) return res.status(500).json({ error: "Ошибка при удалении проекта" });
@@ -359,7 +359,7 @@ app.delete('/api/projects/:id', authenticateToken, (req, res) => {
     });
 });
 
-// ЗАПУСК
+// ЗАПУСК СЕРВЕРА
 app.listen(PORT, () => {
     console.log(`-------------------------------------------`);
     console.log(`СЕРВЕР ЗАПУЩЕН НА ПОРТУ ${PORT}`);

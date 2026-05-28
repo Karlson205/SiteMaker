@@ -7,13 +7,13 @@ const Editor = () => {
     const { id } = useParams();
     const canvasRef = useRef(null);
     
-    // --- СОСТОЯНИЯ АДАПТИВНОСТИ ---
+    //  СОСТОЯНИЯ АДАПТИВНОСТИ 
     const [currentBreakpoint, setCurrentBreakpoint] = useState('desktop');
     const [applyStyleToAllScreen, setApplyStyleToAllScreen] = useState(true);
 
-    // --- СОСТОЯНИЯ ДЛЯ ПУБЛИКАЦИИ ---
+    //  СОСТОЯНИЯ ДЛЯ ПУБЛИКАЦИИ 
     const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
-    const [accessLevel, setAccessLevel] = useState('author'); // 'author' по умолчанию
+    const [accessLevel, setAccessLevel] = useState('author');
     const [isPublishing, setIsPublishing] = useState(false);
 
     const breakpointWidths = {
@@ -22,14 +22,14 @@ const Editor = () => {
         mobile: '360px'
     };
 
-    // --- ОСНОВНЫЕ СОСТОЯНИЯ ---
+    //  ОСНОВНЫЕ СОСТОЯНИЯ 
     const [projectName, setProjectName] = useState('GreenBuild Project');
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [blocks, setBlocks] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [activeTab, setActiveTab] = useState('content');
 
-    // --- ИСТОРИЯ (UNDO/REDO) ---
+    //  ИСТОРИЯ (UNDO/REDO) 
     const [history, setHistory] = useState([[]]); 
     const [historyIndex, setHistoryIndex] = useState(0);
 
@@ -56,7 +56,7 @@ const Editor = () => {
         }
     }, [history, historyIndex]);
 
-    // --- ЗАГРУЗКА ДАННЫХ И МИГРАЦИЯ СТАРЫХ ПРОЕКТОВ ---
+    // ЗАГРУЗКА ДАННЫХ И МИГРАЦИЯ СТАРЫХ ПРОЕКТОВ 
     useEffect(() => {
         const fetchProject = async () => {
             try {
@@ -105,7 +105,7 @@ const Editor = () => {
         }
     };
 
-    // --- СОХРАНЕНИЕ ---
+    //  СОХРАНЕНИЕ 
     const handleSave = useCallback(async () => {
         try {
             await API.put(`/projects/${id}`, { blocks, name: projectName });
@@ -132,7 +132,7 @@ const Editor = () => {
         return () => clearInterval(interval);
     }, [id]);
 
-    // --- ДВИЖЕНИЕ БЛОКОВ (DRAG & DROP) ---
+    //ДВИЖЕНИЕ БЛОКОВ (DRAG & DROP) 
     const [draggingBlockId, setDraggingBlockId] = useState(null);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const [isShiftPressed, setIsShiftPressed] = useState(false);
@@ -152,7 +152,7 @@ const Editor = () => {
         };
     }, [undo, redo]);
 
-    // --- ХЕЛПЕРЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ТЕКУЩЕГО ЭКРАНА ---
+    //  ХЕЛПЕРЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ТЕКУЩЕГО ЭКРАНА 
     const getBlockCoords = (block, bp = currentBreakpoint) => {
         if (block.responsive && block.responsive[bp]) {
             return { x: block.responsive[bp].x, y: block.responsive[bp].y };
@@ -167,7 +167,7 @@ const Editor = () => {
         return block.styles || {};
     };
 
-    // --- ДОБАВЛЕНИЕ БЛОКОВ ---
+    //  ДОБАВЛЕНИЕ БЛОКОВ 
     const addBlock = (type) => {
         const offset = blocks.length * 25;
         
@@ -327,7 +327,7 @@ const Editor = () => {
             {/* ОСНОВНОЙ РАБОЧИЙ ИНТЕРФЕЙС */}
             <div className="flex flex-1 overflow-hidden">
                 
-                {/* ЛЕВАЯ ПАНЕЛЬ: ПОЛНАЯ БИБЛИОТЕКА БЛОКОВ */}
+                {/* ЛЕВАЯ ПАНЕЛЬ */}
                 <aside className="w-72 bg-white border-r border-slate-300 p-6 flex flex-col gap-4 z-20 shadow-2xl overflow-y-auto">
                     <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Библиотека</h2>
                     <button onClick={() => addBlock('heading')} className="group p-5 bg-slate-50 hover:bg-emerald-600 border border-slate-200 rounded-2xl transition-all text-left">
@@ -364,7 +364,7 @@ const Editor = () => {
                     </button>
                 </aside>
 
-                {/* ХОЛСТ (CANVAS) */}
+                {/* CANVAS */}
                 <main className="flex-1 overflow-auto flex justify-center items-start p-12 bg-slate-200"
                     onMouseMove={(e) => {
                         if (!draggingBlockId) return;
@@ -470,7 +470,7 @@ const Editor = () => {
                     </div>
                 </main>
 
-                {/* ПРАВАЯ ПАНЕЛЬ НАСТРОЕК (ИНСПЕКТОР) */}
+                {/* ИНСПЕКТОР */}
                 <aside className={`w-80 bg-white border-l border-slate-300 flex flex-col z-20 shadow-2xl transition-transform duration-300 ${selectedId ? 'translate-x-0' : 'translate-x-full absolute right-0 h-full'}`}>
                     {selectedBlock && (
                         <>
@@ -682,7 +682,7 @@ const Editor = () => {
                 </aside>
             </div>
 
-            {/* МОДАЛЬНОЕ ОКНО ПУБЛИКАЦИИ / НАСТРОЕК ДОСТУПА */}
+            {/* МОДАЛЬНОЕ ОКНО ПУБЛИКАЦИИ */}
             {isPublishModalOpen && (
                 <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white max-w-md w-full rounded-3xl shadow-2xl p-8 border border-slate-100 animate-in fade-in zoom-in-95 duration-200">

@@ -21,10 +21,10 @@ const Login = () => {
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
             
-            {/* Окно формы (как в референсе, но в цветах сайта) */}
+            {/* Окно формы*/}
             <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl shadow-emerald-950/10 p-10 border border-slate-100">
                 
-                {/* ХЕДЕР: Брендинг и Текст (Стиль референса, цвета сайта) */}
+                {/* Header */}
                 <div className="text-center mb-10">
                     <div className="inline-block p-4 bg-emerald-600 rounded-3xl mb-4 shadow-lg shadow-emerald-200">
                         <h2 className="text-4xl font-extrabold text-white tracking-tighter">GB</h2>

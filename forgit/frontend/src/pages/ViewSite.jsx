@@ -11,7 +11,7 @@ const ViewSite = () => {
     const [loading, setLoading] = useState(true);
     const [breakpoint, setBreakpoint] = useState('desktop');
 
-    // Отслеживаем ширину окна в реальном времени
+    // Отслеживалка ширины окна в реальном времени
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -66,9 +66,6 @@ const ViewSite = () => {
             <div style={{ width: breakpointWidths[breakpoint], maxWidth: '100%' }} className="relative min-h-screen bg-white shadow-2xl overflow-hidden transition-all duration-300">
                 {project.blocks.map(block => {
                     const Tag = block.tag;
-                    
-                    // ИДЕАЛЬНАЯ ЛОГИКА: Берем текущий экран, если нет - берем базу, если нет - ставим 0.
-                    // ?? (Nullish Coalescing) позволяет корректно считывать координату "0"
                     const x = block.responsive?.[breakpoint]?.x ?? block.x ?? 0;
                     const y = block.responsive?.[breakpoint]?.y ?? block.y ?? 0;
                     const currentStyles = { ...(block.styles || {}), ...(block.responsive?.[breakpoint]?.styles || {}) };

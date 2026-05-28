@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../api/api'; // Импортируем настроенный axios
+import API from '../api/api';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');

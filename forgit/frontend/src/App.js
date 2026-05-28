@@ -8,6 +8,9 @@ import Verify from './pages/Verify';
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import ViewSite from './pages/ViewSite';
+import About from './pages/About';
+import Templates from './pages/Templates';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -17,14 +20,16 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/templates" element={<Templates />} /> 
           <Route path="/register" element={<Register />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/editor/:id" element={<Editor />} />
-          <Route path="/editor" element={<Editor />} />
+          <Route path="/editor" element={<Editor />} /> 
           <Route path="/site/:id" element={<ViewSite />} />
-          
         </Routes>
       </div>
     </Router>

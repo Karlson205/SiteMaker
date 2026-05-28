@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/api';
-import { Plus, Layout, LogOut, X, Sparkles, FilePlus, Briefcase, ShoppingCart, User } from 'lucide-react';
+import { Plus, Layout, LogOut, X, Sparkles, FilePlus, Briefcase, ShoppingCart, Menu } from 'lucide-react';
 
 const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
-    // Состояния для модального окна создания проекта
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [projectName, setProjectName] = useState('');
-    const [selectedTemplate, setSelectedTemplate] = useState('empty'); 
+    const [selectedTemplate, setSelectedTemplate] = useState('empty');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // --- ОБНОВЛЕННАЯ БАЗА ГОТОВЫХ АДАПТИВНЫХ ШАБЛОНОВ ---
+    // БАЗА ГОТОВЫХ АДАПТИВНЫХ ШАБЛОНОВ
     const templates = {
         empty: [],
         landing: [
@@ -204,7 +203,7 @@ const Dashboard = () => {
         ]
     };
 
-    // --- ФУНКЦИИ ЗАГРУЗКИ И СОЗДАНИЯ ПРОЕКТОВ ---
+    // ФУНКЦИЯ ЗАГРУЗКИ И СОЗДАНИЯ ПРОЕКТОВ
     useEffect(() => {
         const fetchProjects = async () => {
             try {
@@ -258,7 +257,6 @@ const Dashboard = () => {
         navigate('/login');
     };
 
-    // --- ФУНКЦИИ ГЕНЕРАЦИИ МИНИАТЮР ДЛЯ КАРТОЧЕК ---
     const renderLandingThumbnail = () => (
         <div className="w-full h-full flex flex-col gap-1 items-center justify-center p-4 bg-white opacity-80 select-none">
             <div className="w-20 h-2.5 bg-emerald-800/20 rounded-sm"></div>
@@ -310,13 +308,11 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f4fbf8] font-sans flex flex-col">
+        <div className="min-h-screen bg-[#f4fbf8] font-sans flex flex-col overflow-x-hidden">
             
-            {/* ШАПКА ПАНЕЛИ (z-10, чтобы оставаться под модальным окном) */}
-            <header className="sticky top-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-10 shadow-sm">
+            {/* ХЕДЕР КАК НА ГЛАВНОЙ СТРАНИЦЕ */}
+            <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-[100]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-                    
-                    {/* Logo */}
                     <div className="flex items-center gap-2 group cursor-pointer" onClick={() => navigate('/')}>
                         <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
                             <span className="text-white font-black text-xl italic">GB</span>
@@ -324,45 +320,63 @@ const Dashboard = () => {
                         <span className="font-black text-xl tracking-tighter text-emerald-950">GREENBUILD</span>
                     </div>
 
-                    {/* Desktop Nav */}
                     <nav className="hidden lg:flex items-center gap-8">
-                        {['О проекте', 'Шаблоны', 'Связь'].map((item) => (
-                            <button key={item} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
-                                {item}
-                            </button>
-                        ))}
+                        <button onClick={() => navigate('/about')} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
+                            О проекте
+                        </button>
+                        <button onClick={() => navigate('/templates')} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
+                            Шаблоны
+                        </button>
+                        <button onClick={() => navigate('/contact')} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
+                            Связь
+                        </button>
                     </nav>
 
-                    {/* Навигация справа */}
                     <div className="flex items-center gap-3">
-                        <button 
-                            onClick={() => navigate('/dashboard')}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-md shadow-emerald-600/10"
-                        >
-                            МОИ ПРОЕКТЫ
-                        </button>
-                        <button 
-                            onClick={() => navigate('/dashboard')}
-                            className="p-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl transition-all"
-                            title="Профиль"
-                        >
-                            <User size={18} />
-                        </button>
-
-                        <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
-
-                        <button 
-                            onClick={handleLogout} 
-                            className="flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-rose-600 transition-colors"
-                        >
-                            <LogOut size={16} /> <span className="hidden sm:inline">Выйти</span>
+                        <div className="hidden sm:flex items-center gap-3">
+                            <button 
+                                onClick={() => navigate('/dashboard')}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all active:scale-95 shadow-md shadow-emerald-600/10"
+                            >
+                                МОИ ПРОЕКТЫ
+                            </button>
+                            <button 
+                                onClick={handleLogout} 
+                                className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-rose-600 transition-colors"
+                            >
+                                <LogOut size={16} /> Выйти
+                            </button>
+                        </div>
+                        
+                        <button className="lg:hidden p-2 text-slate-600" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
                         </button>
                     </div>
                 </div>
+
+                {isMenuOpen && (
+                    <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-top">
+                        <button onClick={() => { navigate('/about'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            О проекте
+                        </button>
+                        <button onClick={() => { navigate('/templates'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            Шаблоны
+                        </button>
+                        <button onClick={() => { navigate('/contact'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            Связь
+                        </button>
+                        <button onClick={() => { navigate('/dashboard'); setIsMenuOpen(false); }} className="w-full bg-emerald-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">
+                            Мои проекты
+                        </button>
+                        <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-rose-600">
+                            Выйти
+                        </button>
+                    </div>
+                )}
             </header>
 
             {/* ОСНОВНОЙ КОНТЕНТ */}
-            <main className="flex-1 max-w-7xl w-full mx-auto p-8 space-y-8">
+            <main className="flex-1 max-w-7xl w-full mx-auto p-8 space-y-8 pt-28">
                 
                 <div className="flex justify-between items-center pt-4">
                     <div className="space-y-1">
@@ -413,12 +427,32 @@ const Dashboard = () => {
                 )}
             </main>
 
-            {/* ПОДВАЛ */}
-            <footer className="bg-white border-t border-[#e1f2eb] py-6 px-8 text-center text-xs font-semibold text-slate-400 shrink-0">
-                &copy; {new Date().getFullYear()} GreenBuild Designer. Все права защищены.
+            {/* ФУТЕР КАК НА ГЛАВНОЙ СТРАНИЦЕ */}
+            <footer className="bg-emerald-950 py-12 md:py-20 px-6 text-white text-center md:text-left">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div className="flex flex-col items-center md:items-start">
+                        <div className="flex items-center gap-2 mb-6">
+                            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center italic font-black">GB</div>
+                            <span className="font-black text-xl">GREENBUILD</span>
+                        </div>
+                        <p className="text-emerald-400 text-xs uppercase font-black tracking-widest">Build the future</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8 md:col-span-2">
+                        <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
+                            <p className="text-emerald-500">Продукт</p>
+                            <p className="hover:text-white cursor-pointer transition-colors">Функции</p>
+                            <p className="hover:text-white cursor-pointer transition-colors">Цены</p>
+                        </div>
+                        <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
+                            <p className="text-emerald-500">Компания</p>
+                            <p className="hover:text-white cursor-pointer transition-colors">О нас</p>
+                            <p className="hover:text-white cursor-pointer transition-colors">Помощь</p>
+                        </div>
+                    </div>
+                </div>
             </footer>
 
-            {/* МОДАЛЬНОЕ ОКНО СОЗДАНИЯ ПРОЕКТА (Исправленный высокий z-index) */}
+            {/* МОДАЛЬНОЕ ОКНО СОЗДАНИЯ ПРОЕКТА */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-emerald-950/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn z-[999]">
                     <div className="bg-white rounded-[32px] shadow-2xl max-w-2xl w-full p-8 my-10 relative flex flex-col max-h-[calc(100vh-5rem)] overflow-hidden border border-slate-100">
