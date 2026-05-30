@@ -14,6 +14,7 @@ const Templates = () => {
             setIsLoggedIn(true);
         }
     }, []);
+    
     const templateCards = [
         {
             id: 'empty',
@@ -91,15 +92,30 @@ const Templates = () => {
                     </div>
 
                     <nav className="hidden lg:flex items-center gap-8">
-                        {['О проекте', 'Шаблоны', 'Связь'].map((item) => (
-                            <button 
-                                key={item} 
-                                onClick={() => item === 'Шаблоны' ? navigate('/templates') : item === 'О проекте' ? navigate('/about') : navigate('/')}
-                                className={`text-[11px] font-black uppercase tracking-widest transition-colors ${item === 'Шаблоны' ? 'text-emerald-600' : 'text-slate-500 hover:text-emerald-600'}`}
-                            >
-                                {item}
-                            </button>
-                        ))}
+                        <button 
+                            onClick={() => navigate('/about')} 
+                            className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors"
+                        >
+                            О проекте
+                        </button>
+                        <button 
+                            onClick={() => navigate('/templates')} 
+                            className="text-[11px] font-black uppercase tracking-widest text-emerald-600 transition-colors"
+                        >
+                            Шаблоны
+                        </button>
+                        <button 
+                            onClick={() => navigate('/pricing')} 
+                            className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors"
+                        >
+                            Подписка
+                        </button>
+                        <button 
+                            onClick={() => navigate('/contact')} 
+                            className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors"
+                        >
+                            Связь
+                        </button>
                     </nav>
 
                     <div className="flex items-center gap-3">
@@ -126,17 +142,29 @@ const Templates = () => {
 
                 {isMenuOpen && (
                     <div className="lg:hidden absolute top-20 left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-top">
+                        <button onClick={() => { navigate('/about'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            О проекте
+                        </button>
+                        <button onClick={() => { navigate('/templates'); setIsMenuOpen(false); }} className="w-full border-2 border-emerald-200 bg-emerald-50 py-4 rounded-xl font-black uppercase tracking-widest text-emerald-700">
+                            Шаблоны
+                        </button>
+                        <button onClick={() => { navigate('/pricing'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            Подписка
+                        </button>
+                        <button onClick={() => { navigate('/contact'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                            Связь
+                        </button>
                         {isLoggedIn ? (
                             <>
-                                <button onClick={() => navigate('/dashboard')} className="w-full bg-emerald-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">
+                                <button onClick={() => { navigate('/dashboard'); setIsMenuOpen(false); }} className="w-full bg-emerald-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">
                                     Мои проекты
                                 </button>
-                                <button onClick={() => navigate('/dashboard')} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
+                                <button onClick={() => { navigate('/dashboard'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
                                     Профиль
                                 </button>
                             </>
                         ) : (
-                            <button onClick={() => navigate('/login')} className="w-full bg-emerald-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">
+                            <button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} className="w-full bg-emerald-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">
                                 Войти
                             </button>
                         )}
@@ -213,12 +241,14 @@ const Templates = () => {
                     <div className="grid grid-cols-2 gap-8 md:col-span-2">
                         <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
                             <p className="text-emerald-500">Продукт</p>
+                            <p onClick={() => navigate('/pricing')} className="hover:text-white cursor-pointer transition-colors">Подписка</p>
+                            <p onClick={() => navigate('/templates')} className="hover:text-white cursor-pointer transition-colors">Шаблоны</p>
                             <p className="hover:text-white cursor-pointer transition-colors">Функции</p>
-                            <p className="hover:text-white cursor-pointer transition-colors">Цены</p>
                         </div>
                         <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
                             <p className="text-emerald-500">Компания</p>
-                            <p className="hover:text-white cursor-pointer transition-colors">О нас</p>
+                            <p onClick={() => navigate('/about')} className="hover:text-white cursor-pointer transition-colors">О нас</p>
+                            <p onClick={() => navigate('/contact')} className="hover:text-white cursor-pointer transition-colors">Контакты</p>
                             <p className="hover:text-white cursor-pointer transition-colors">Помощь</p>
                         </div>
                     </div>

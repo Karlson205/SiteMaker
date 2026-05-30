@@ -41,7 +41,7 @@ const Login = () => {
                         <input 
                             type="text" 
                             className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-emerald-950 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                            placeholder="mr_fort"
+                            placeholder="Ваше имя"
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />

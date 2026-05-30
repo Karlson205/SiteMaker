@@ -11,6 +11,8 @@ import ViewSite from './pages/ViewSite';
 import About from './pages/About';
 import Templates from './pages/Templates';
 import Contact from './pages/Contact';
+import Pricing from './pages/Pricing';
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/templates" element={<Templates />} /> 
           <Route path="/register" element={<Register />} />

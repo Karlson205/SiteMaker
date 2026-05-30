@@ -39,6 +39,9 @@ const Home = () => {
                         <button onClick={() => navigate('/templates')} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
                             Шаблоны
                         </button>
+                        <button onClick={() => navigate('/pricing')} className="text-[11px] font-black uppercase tracking-widest text-emerald-600 transition-colors">
+                            Подписка
+                        </button>
                         <button onClick={() => navigate('/contact')} className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors">
                             Связь
                         </button>
@@ -74,6 +77,9 @@ const Home = () => {
                         </button>
                         <button onClick={() => { navigate('/templates'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
                             Шаблоны
+                        </button>
+                        <button onClick={() => { navigate('/pricing'); setIsMenuOpen(false); }} className="w-full border-2 border-emerald-200 bg-emerald-50 py-4 rounded-xl font-black uppercase tracking-widest text-emerald-700">
+                            Подписка
                         </button>
                         <button onClick={() => { navigate('/contact'); setIsMenuOpen(false); }} className="w-full border-2 border-slate-100 py-4 rounded-xl font-black uppercase tracking-widest text-slate-600">
                             Связь
@@ -141,12 +147,14 @@ const Home = () => {
                     <div className="grid grid-cols-2 gap-8 md:col-span-2">
                         <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
                             <p className="text-emerald-500">Продукт</p>
+                            <p onClick={() => navigate('/pricing')} className="hover:text-white cursor-pointer transition-colors">Подписка</p>
+                            <p onClick={() => navigate('/templates')} className="hover:text-white cursor-pointer transition-colors">Шаблоны</p>
                             <p className="hover:text-white cursor-pointer transition-colors">Функции</p>
-                            <p className="hover:text-white cursor-pointer transition-colors">Цены</p>
                         </div>
                         <div className="space-y-4 text-sm font-bold text-emerald-100/40 uppercase tracking-tighter">
                             <p className="text-emerald-500">Компания</p>
-                            <p className="hover:text-white cursor-pointer transition-colors">О нас</p>
+                            <p onClick={() => navigate('/about')} className="hover:text-white cursor-pointer transition-colors">О нас</p>
+                            <p onClick={() => navigate('/contact')} className="hover:text-white cursor-pointer transition-colors">Контакты</p>
                             <p className="hover:text-white cursor-pointer transition-colors">Помощь</p>
                         </div>
                     </div>
